@@ -2,3 +2,9 @@
   base = "frontend"
   publish = "build"
   command = "npm run build"
+
+# Make React Router routes work on Netlify
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
