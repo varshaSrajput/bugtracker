@@ -139,7 +139,7 @@ body {
   margin-bottom: 8px;
 }
 
-/* ========= Auth (Login) ========= */
+/* ========= Auth (Login & Register) ========= */
 
 .page-auth {
   display: flex;
@@ -214,6 +214,8 @@ body {
 
 .dashboard-root {
   padding: 24px 40px 40px;
+  max-width: 960px;        /* limit width */
+  margin: 0 auto;          /* center the whole dashboard */
 }
 
 .dashboard-root h1 {
@@ -233,6 +235,8 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 18px;
+  max-width: 720px;      /* narrower content */
+  margin: 0 auto;        /* center grid inside dashboard */
 }
 
 /* Bug form card */
