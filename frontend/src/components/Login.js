@@ -1,7 +1,7 @@
-// src/components/Login.js
+// frontend/src/components/Login.js
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import api from "../api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -14,9 +14,10 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post("/api/login", { email, password });
+      // POST /login  (baseURL + "/login" => .../api/login)
+      const res = await api.post("/login", { email, password });
 
-      // save token + user for navbar
+      // Save token + user for navbar & protected routes
       localStorage.setItem("token", res.data.access_token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
@@ -77,3 +78,4 @@ const Login = () => {
 };
 
 export default Login;
+

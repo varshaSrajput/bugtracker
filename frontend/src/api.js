@@ -1,19 +1,22 @@
-// src/api.js
+// frontend/src/api.js
 import axios from "axios";
 
-// If backend is on http://127.0.0.1:5000
-const api = axios.create({
-  baseURL: "http://127.0.0.1:5000/api",
-});
+// Backend URLs
+const PROD_API = "https://bugtracker-hfqr.onrender.com/api"; // Render backend
+const LOCAL_API = "http://127.0.0.1:5000/api";                // Local backend
 
-// Automatically attach token if present
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Automatically choose local or production based on where the app is running
+let API_BASE_URL = PROD_API;
+
+if (typeof window !== "undefined") {
+  const host = window.location.hostname;
+  if (host === "localhost" || host === "127.0.0.1") {
+    API_BASE_URL = LOCAL_API;
   }
-  return config;
+}
+
+const api = axios.create({
+  baseURL: API_BASE_URL,
 });
 
-export default api;   // ⬅️ default export (IMPORTANT)
-
+export default api;

@@ -1,4 +1,4 @@
-# app.py
+# backend/app.py
 from flask import Flask, request, jsonify
 from config import Config
 from models import db, User, Bug
@@ -16,12 +16,18 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     CORS(app)
+
+    # init db + create tables (useful on Render)
     db.init_app(app)
+    with app.app_context():
+        db.create_all()
+
     jwt = JWTManager(app)
 
     @app.route("/api/register", methods=["POST"])
     def register():
         data = request.json
+
         if User.query.filter_by(email=data["email"]).first():
             return jsonify({"msg": "Email already exists"}), 400
 
@@ -43,6 +49,7 @@ def create_app():
     def login():
         data = request.json
         user = User.query.filter_by(email=data["email"]).first()
+
         if not user or not bcrypt.checkpw(
             data["password"].encode(), user.password_hash.encode()
         ):
@@ -161,9 +168,8 @@ def create_app():
     return app
 
 
-# Expose a module-level `app` for gunicorn: `gunicorn app:app`
+# for gunicorn on Render
 app = create_app()
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
-

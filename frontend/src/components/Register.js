@@ -1,7 +1,7 @@
-// src/components/Register.js
+// frontend/src/components/Register.js
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import api from "../api";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -16,15 +16,22 @@ const Register = () => {
     setError("");
 
     try {
-      await axios.post("/api/register", {
+      // POST /register  (baseURL + "/register" => .../api/register)
+      await api.post("/register", {
         name,
         email,
         password,
         role,
       });
+
+      // On success go to login page
       navigate("/login");
     } catch (err) {
-      setError(err.response?.data?.msg || "Registration failed");
+      const msg =
+        err.response?.data?.msg ||
+        err.response?.data?.error ||
+        "Registration failed";
+      setError(msg);
     }
   };
 
@@ -102,5 +109,6 @@ const Register = () => {
 };
 
 export default Register;
+
 
 
