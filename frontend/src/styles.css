@@ -210,19 +210,22 @@ body {
   color: #6b7280;
 }
 
-/* ========= Dashboard basics ========= */
+/* ========= Dashboard centered ========= */
 
+/* This is the whole page wrapper for dashboard */
+.page-dashboard {
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  padding: 32px 16px 48px;
+}
+
+/* This is the main content box */
 .dashboard-root {
-  padding: 24px 40px 40px;
-  max-width: 960px;        /* limit width */
-  margin: 0 auto;          /* center the whole dashboard */
+  width: 100%;
+  max-width: 960px;          /* controls overall width */
 }
 
-.dashboard-root h1 {
-  margin-top: 0;
-  margin-bottom: 6px;
-}
-
+/* subtitle under the title */
 .dashboard-root .subtitle {
   margin-top: 0;
   margin-bottom: 20px;
@@ -230,13 +233,13 @@ body {
   color: #6b7280;
 }
 
-/* layout: form + list */
+/* layout: form + list stacked, both centered */
 .dashboard-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 18px;
-  max-width: 720px;      /* narrower content */
-  margin: 0 auto;        /* center grid inside dashboard */
+  max-width: 720px;          /* narrower column */
+  margin: 0 auto;            /* center inside root */
 }
 
 /* Bug form card */
@@ -300,7 +303,7 @@ tbody tr:nth-child(even) {
     padding: 28px 20px;
   }
 
-  .dashboard-root {
-    padding: 18px 16px 32px;
+  .page-dashboard {
+    padding: 20px 12px 32px;
   }
 }

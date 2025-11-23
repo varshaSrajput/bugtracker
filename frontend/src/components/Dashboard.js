@@ -1,19 +1,21 @@
+// frontend/src/components/Dashboard.js
 import React, { useEffect, useState } from "react";
-import api from "../api";
 import BugForm from "./BugForm";
 import BugList from "./BugList";
+import api from "../api";
 
-export default function Dashboard({ user, onLogout }) {
+export default function Dashboard() {
   const [bugs, setBugs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function loadBugs() {
+  // ---------- Load bugs from API ----------
+  async function fetchBugs() {
     try {
-      setError("");
       setLoading(true);
-      const res = await api.get("/bugs");
-      setBugs(res.data);
+      setError("");
+      const resp = await api.get("/bugs"); // GET /api/bugs
+      setBugs(resp.data || []);
     } catch (err) {
       console.error("Failed to load bugs", err);
       setError("Failed to load bugs.");
@@ -23,43 +25,70 @@ export default function Dashboard({ user, onLogout }) {
   }
 
   useEffect(() => {
-    loadBugs();
+    fetchBugs();
   }, []);
 
+  // ---------- Create bug ----------
+  async function handleCreateBug(payload) {
+    try {
+      await api.post("/bugs", payload); // POST /api/bugs
+      await fetchBugs();
+    } catch (err) {
+      console.error("Failed to create bug", err);
+      throw err;
+    }
+  }
+
+  // ---------- Update bug ----------
+  async function handleUpdateBug(id, updates) {
+    try {
+      await api.put(`/bugs/${id}`, updates); // PUT /api/bugs/:id
+      setBugs((prev) =>
+        prev.map((b) => (b.id === id ? { ...b, ...updates } : b))
+      );
+    } catch (err) {
+      console.error("Failed to update bug", err);
+    }
+  }
+
+  // ---------- Delete bug ----------
+  async function handleDeleteBug(id) {
+    try {
+      await api.delete(`/bugs/${id}`); // DELETE /api/bugs/:id
+      setBugs((prev) => prev.filter((b) => b.id !== id));
+    } catch (err) {
+      console.error("Failed to delete bug", err);
+    }
+  }
+
   return (
-    <div className="page fade-in">
-      <nav className="navbar">
-        <div className="logo">BugTracker</div>
-        <div className="nav-right">
-          {user && <span className="user-pill">{user.name}</span>}
-          <button className="btn secondary tiny" onClick={onLogout}>
-            Logout
-          </button>
-        </div>
-      </nav>
+    <div className="page page-dashboard">
+      <div className="dashboard-root">
+        <h1>BugTracker</h1>
+        <p className="subtitle">
+          Create, track and manage all your project bugs in one place.
+        </p>
 
-      <main className="bug-layout">
-        <section className="card slide-up">
-          <h2>Create a Bug</h2>
-          <p className="muted small-text">
-            Add a new bug with title, description, priority and status.
-          </p>
-          <BugForm onCreated={loadBugs} />
-        </section>
-
-        <section className="card slide-up delay">
-          <div className="card-header">
-            <h2>All Bugs</h2>
+        <div className="dashboard-grid">
+          {/* LEFT / TOP: Create bug card */}
+          <div className="bug-card">
+            {/* BugForm should call this when the form is submitted */}
+            <BugForm onCreateBug={handleCreateBug} />
           </div>
-          {loading ? (
-            <p className="muted">Loading bugs…</p>
-          ) : error ? (
-            <p className="error">{error}</p>
-          ) : (
-            <BugList bugs={bugs} onChanged={loadBugs} />
-          )}
-        </section>
-      </main>
+
+          {/* RIGHT / BOTTOM: Bug list card */}
+          <div className="bug-table-wrapper">
+            <BugList
+              bugs={bugs}
+              loading={loading}
+              error={error}
+              onUpdateBug={handleUpdateBug}
+              onDeleteBug={handleDeleteBug}
+              onReload={fetchBugs}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
