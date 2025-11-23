@@ -1,34 +1,28 @@
 // src/App.js
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
 import Home from "./components/Home";
 import Login from "./components/Login";
+import Register from "./components/Register";
 import Dashboard from "./components/Dashboard";
+import BugForm from "./components/BugForm";
+import BugList from "./components/BugList";
 
-function RequireAuth({ children }) {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-  return children;
-}
-
-export default function App() {
+function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route
-        path="/dashboard"
-        element={
-          <RequireAuth>
-            <Dashboard />
-          </RequireAuth>
-        }
-      />
-      {/* fallback */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/bugs/new" element={<BugForm />} />
+        <Route path="/bugs" element={<BugList />} />
+      </Routes>
+    </>
   );
 }
 
+export default App;
