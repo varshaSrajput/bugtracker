@@ -15,7 +15,11 @@ const Login = () => {
 
     try {
       const res = await axios.post("/api/login", { email, password });
+
+      // save token + user for navbar
       localStorage.setItem("token", res.data.access_token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
       navigate("/dashboard");
     } catch (err) {
       setError("Invalid credentials");
@@ -23,38 +27,48 @@ const Login = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Login</h2>
-        <p>Use the credentials you created.</p>
+    <div className="page page-auth">
+      <div className="card">
+        <h2 className="card-title">Login</h2>
+        <p className="card-subtitle">
+          Use the credentials you created (e.g. admin@example.com).
+        </p>
 
-        <form onSubmit={handleSubmit}>
-          <label>Email</label>
-          <input
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+        <form className="form" onSubmit={handleSubmit}>
+          <label>
+            Email
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
 
-          <label>Password</label>
-          <input
-            type="password"
-            placeholder="******"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <label>
+            Password
+            <input
+              type="password"
+              placeholder="******"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
 
-          {error && <p style={{ color: "red", marginTop: 8 }}>{error}</p>}
+          {error && (
+            <p className="status-text" style={{ color: "red" }}>
+              {error}
+            </p>
+          )}
 
-          <button type="submit" className="btn-primary" style={{ marginTop: 12 }}>
+          <button type="submit" className="btn btn-primary">
             Login
           </button>
         </form>
 
-        <p style={{ marginTop: 12 }}>
+        <p className="muted" style={{ marginTop: 12 }}>
           New user? <Link to="/register">Create account</Link>
         </p>
       </div>

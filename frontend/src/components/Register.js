@@ -22,8 +22,6 @@ const Register = () => {
         password,
         role,
       });
-
-      // on success, go to login
       navigate("/login");
     } catch (err) {
       setError(err.response?.data?.msg || "Registration failed");
@@ -31,54 +29,71 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Register</h2>
-        <p>Create your account to start using BugTracker.</p>
+    <div className="page page-auth">
+      <div className="card">
+        <h2 className="card-title">Register</h2>
+        <p className="card-subtitle">
+          Create your account to start using BugTracker.
+        </p>
 
-        <form onSubmit={handleSubmit}>
-          <label>Name</label>
-          <input
-            type="text"
-            placeholder="Your full name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+        <form className="form" onSubmit={handleSubmit}>
+          <label>
+            Name
+            <input
+              type="text"
+              placeholder="Your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </label>
 
-          <label>Email</label>
-          <input
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <label>
+            Email
+            <input
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </label>
 
-          <label>Password</label>
-          <input
-            type="password"
-            placeholder="******"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <label>
+            Password
+            <input
+              type="password"
+              placeholder="******"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
 
-          <label>Role</label>
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="developer">Developer</option>
-            <option value="tester">Tester</option>
-            <option value="manager">Manager</option>
-          </select>
+          <label>
+            Role
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="developer">Developer</option>
+              <option value="tester">Tester</option>
+              <option value="manager">Manager</option>
+            </select>
+          </label>
 
-          {error && <p style={{ color: "red", marginTop: 8 }}>{error}</p>}
+          {error && (
+            <p className="status-text" style={{ color: "red" }}>
+              {error}
+            </p>
+          )}
 
-          <button type="submit" className="btn-primary" style={{ marginTop: 12 }}>
+          <button type="submit" className="btn btn-primary">
             Create Account
           </button>
         </form>
 
-        <p style={{ marginTop: 12 }}>
+        <p className="muted" style={{ marginTop: 12 }}>
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </div>
@@ -87,3 +102,5 @@ const Register = () => {
 };
 
 export default Register;
+
+

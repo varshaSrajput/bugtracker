@@ -4,13 +4,17 @@ import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
+
   const user = (() => {
     try {
-      return JSON.parse(localStorage.getItem("user")) || null;
+      const raw = localStorage.getItem("user");
+      return raw ? JSON.parse(raw) : null;
     } catch {
       return null;
     }
   })();
+
+  const hasToken = !!localStorage.getItem("token");
 
   function handleLogout() {
     localStorage.removeItem("token");
@@ -18,15 +22,40 @@ export default function Navbar() {
     navigate("/login");
   }
 
+  function goLogin() {
+    navigate("/login");
+  }
+
+  function goRegister() {
+    navigate("/register");
+  }
+
   return (
     <nav className="nav">
-      <div className="nav-logo">BugTracker Pro</div>
+      <div className="nav-logo" onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
+        BugTracker Pro
+      </div>
+
       <div className="nav-right">
-        {user && <span className="nav-user">{user.name || user.email}</span>}
-        <button className="btn btn-logout" onClick={handleLogout}>
-          Logout
-        </button>
+        {user && hasToken ? (
+          <>
+            <span className="nav-user">{user.name || user.email}</span>
+            <button className="btn btn-logout" onClick={handleLogout}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <button className="btn btn-small" onClick={goLogin}>
+              Login
+            </button>
+            <button className="btn btn-primary btn-small" onClick={goRegister}>
+              Register
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );
 }
+
